@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_qrcode_app/core/auth_manager.dart';
+import 'package:flutter_qrcode_app/core/cache_manager.dart';
+import 'package:flutter_qrcode_app/model/user_model.dart';
 import 'package:flutter_qrcode_app/screens/login.dart';
 import 'package:flutter_qrcode_app/screens/qrcode.dart';
 
@@ -9,7 +13,22 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with CacheManager {
+  String token = '';
+
+  late UserModel userModel;
+
+  Future<void> getTokenCache() async {
+    token = await getToken() ?? '';
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    userModel = context.read<AuthenticationManager>().model!;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +41,7 @@ class _HomePageState extends State<HomePage> {
               primary: Colors.white,
             ),
             onPressed: () {
+              context.read<AuthenticationManager>().removeAllData();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -56,6 +76,10 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 16.0,
                       color: Colors.black87,
                     ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(userModel.imgUrl),
                   ),
                 ],
               ),
