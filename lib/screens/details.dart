@@ -21,11 +21,10 @@ class _DetailsPageState extends State<DetailsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.close),
-            onPressed: () => Navigator.push(
+            onPressed: () => Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (context) => const HomePage(),
-              ),
+              MaterialPageRoute(builder: (context) => const HomePage()),
+              (route) => false,
             ),
           ),
         ],

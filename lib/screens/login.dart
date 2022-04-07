@@ -55,6 +55,7 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                     controller: _emailController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.mail_outline_rounded),
                       labelText: 'Email',
                     ),
                   ),
@@ -65,6 +66,7 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                     controller: _passwordController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.lock_outline_rounded),
                       labelText: 'Password',
                     ),
                     obscureText: true,
@@ -116,7 +118,8 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   }
 
   void navigateToHome() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const HomePage()));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (route) => false);
   }
 }

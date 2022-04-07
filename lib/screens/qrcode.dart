@@ -45,11 +45,13 @@ class _QRCodePageState extends State<QRCodePage> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
       controller.dispose();
-      await Navigator.push(
-        context,
+      await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => DetailsPage(qrText: scanData.code.toString()),
+          builder: (context) => DetailsPage(
+            qrText: scanData.code.toString(),
+          ),
         ),
+        (route) => false,
       );
     });
   }

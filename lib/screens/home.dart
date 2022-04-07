@@ -42,11 +42,9 @@ class _HomePageState extends State<HomePage> with CacheManager {
             ),
             onPressed: () {
               context.read<AuthenticationManager>().removeAllData();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LoginPage(),
-                ),
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false,
               );
             },
             child: const Text('Logout'),

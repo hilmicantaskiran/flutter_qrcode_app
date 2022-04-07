@@ -19,10 +19,10 @@ class _SplashScreenState extends State<SplashScreen> {
       await Future.delayed(const Duration(seconds: 1));
       readAuthManager.model = UserModel.fake();
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const HomePage()));
+          .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
     } else {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+          .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
     }
   }
 
