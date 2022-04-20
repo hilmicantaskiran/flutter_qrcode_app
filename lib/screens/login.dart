@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_qrcode_app/screens/home.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:flutter_qrcode_app/model/environment.dart';
 import 'package:flutter_qrcode_app/model/user_model.dart';
+import 'package:flutter_qrcode_app/screens/home.dart';
+import 'package:flutter_qrcode_app/core/auth_manager.dart';
 import 'package:flutter_qrcode_app/core/cache_manager.dart';
 import 'package:flutter_qrcode_app/services/login_service.dart';
 import 'package:flutter_qrcode_app/model/user_request_model.dart';
-import 'package:flutter_qrcode_app/core/auth_manager.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   final _formKey = GlobalKey<FormState>();
 
   late final LoginService loginService;
-  final _baseUrl = "http://odemetakip.herokuapp.com";
+  final _baseUrl = Environment.apiUrl;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -37,59 +38,120 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.all(20),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 30),
-                    )),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  child: TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.mail_outline_rounded),
-                      labelText: 'Email',
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 40),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 45,
                     ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'Email address',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: 'example@email.com',
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: const EdgeInsets.all(14),
+                      suffixIcon: const Icon(
+                        Icons.mail_outline_rounded,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'Password',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                   child: TextFormField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock_outline_rounded),
-                      labelText: 'Password',
+                    decoration: InputDecoration(
+                      hintText: '••••••••',
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: const EdgeInsets.all(14),
+                      suffixIcon: const Icon(
+                        Icons.lock_outline_rounded,
+                      ),
                     ),
                     obscureText: true,
                   ),
                 ),
                 Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: ElevatedButton(
-                        child: const Text('Login'),
-                        style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.blue),
-                          minimumSize: MaterialStateProperty.all<Size>(
-                            const Size.fromHeight(50),
-                          ),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            _formKey.currentState!.save();
-                            fetchUserLogin(_emailController.text,
-                                _passwordController.text);
-                          }
-                        })),
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: RichText(
+                    text: const TextSpan(
+                      text: 'Forgot password?',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: ElevatedButton(
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        _formKey.currentState!.save();
+                        fetchUserLogin(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                      }
+                    },
+                  ),
+                ),
               ],
             ),
           ),
@@ -107,8 +169,12 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   }
 
   Future<void> fetchUserLogin(String email, String password) async {
-    final response = await loginService
-        .fetchLogin(UserRequestModel(email: email, password: password));
+    final response = await loginService.fetchLogin(
+      UserRequestModel(
+        email: email,
+        password: password,
+      ),
+    );
 
     if (response != null) {
       saveToken(response.token ?? '');
@@ -118,8 +184,10 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   }
 
   void navigateToHome() {
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const HomePage()),
-        (route) => false);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      ),
+    );
   }
 }

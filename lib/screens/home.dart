@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_qrcode_app/core/auth_manager.dart';
+import 'package:flutter_qrcode_app/assets/style/palette.dart';
 import 'package:flutter_qrcode_app/core/cache_manager.dart';
-import 'package:flutter_qrcode_app/model/user_model.dart';
-import 'package:flutter_qrcode_app/screens/login.dart';
+import 'package:flutter_qrcode_app/components/navbar.dart';
 import 'package:flutter_qrcode_app/screens/qrcode.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,40 +14,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with CacheManager {
   String token = '';
 
-  late UserModel userModel;
-
   Future<void> getTokenCache() async {
     token = await getToken() ?? '';
     setState(() {});
   }
 
   @override
-  void initState() {
-    super.initState();
-    userModel = context.read<AuthenticationManager>().model!;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const NavBar(),
       appBar: AppBar(
         title: const Text('Home'),
+        shadowColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              primary: Colors.white,
-            ),
-            onPressed: () {
-              context.read<AuthenticationManager>().removeAllData();
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-                (route) => false,
-              );
-            },
-            child: const Text('Logout'),
-          ),
-        ],
+        backgroundColor: Palette.greyToDark[400],
       ),
       body: Container(
         margin: const EdgeInsets.all(20.0),
@@ -57,36 +35,36 @@ class _HomePageState extends State<HomePage> with CacheManager {
           children: <Widget>[
             Flexible(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const SizedBox(height: 10.0),
-                  Text(
-                    'Welcome to QR Code Scanner',
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: const Text(
+                      'Welcome to QR Code Scanner',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 20.0),
-                  Text(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black87,
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: const Text(
+                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                      style: TextStyle(fontSize: 18.0),
                     ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(userModel.imgUrl),
-                  ),
+                  )
                 ],
               ),
             ),
             ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                minimumSize: MaterialStateProperty.all<Size>(
-                    const Size.fromHeight(50.0)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(50),
+                primary: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: const Text('Scan QR Code'),
               onPressed: () {

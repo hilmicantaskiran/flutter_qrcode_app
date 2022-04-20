@@ -18,11 +18,17 @@ class _SplashScreenState extends State<SplashScreen> {
     if (readAuthManager.isLogin) {
       await Future.delayed(const Duration(seconds: 1));
       readAuthManager.model = UserModel.fake();
-      Navigator.of(context)
-          .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+          (route) => false);
     } else {
-      Navigator.of(context)
-          .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+          (route) => false);
     }
   }
 

@@ -45,7 +45,8 @@ class _QRCodePageState extends State<QRCodePage> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) async {
       controller.dispose();
-      await Navigator.of(context).pushAndRemoveUntil(
+      await Navigator.pushAndRemoveUntil(
+        context,
         MaterialPageRoute(
           builder: (context) => DetailsPage(
             qrText: scanData.code.toString(),
