@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_qrcode_app/assets/style/palette.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_qrcode_app/screens/login.dart';
 import 'package:flutter_qrcode_app/core/auth_manager.dart';
@@ -27,6 +28,10 @@ class _NavBarState extends State<NavBar> {
         padding: const EdgeInsets.all(0),
         children: <Widget>[
           UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: Palette.greyToDark[400],
+              backgroundBlendMode: BlendMode.darken,
+            ),
             accountName: Text(userModel.name),
             accountEmail: Text(userModel.email),
             currentAccountPicture: CircleAvatar(

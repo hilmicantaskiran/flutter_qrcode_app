@@ -42,7 +42,8 @@ class _DetailsPageState extends State<DetailsPage> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  parseVCardFromString(widget.qrText),
+                  widget.qrText,
+                  // parseVCardFromString(widget.qrText),
                   style: const TextStyle(fontSize: 16.0),
                 ),
               ),
@@ -73,6 +74,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 }
 
+/*
 parseVCardFromString(String qrText) {
   try {
     var begin = qrText.split('BEGIN:VCARD');
@@ -88,3 +90,4 @@ parseVCardFromString(String qrText) {
     return qrText;
   }
 }
+*/

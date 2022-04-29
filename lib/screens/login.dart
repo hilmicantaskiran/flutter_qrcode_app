@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_qrcode_app/model/environment.dart';
@@ -164,7 +165,9 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   void initState() {
     super.initState();
     final dio = Dio(BaseOptions(baseUrl: _baseUrl));
-    dio.interceptors.add(PrettyDioLogger());
+    if (kDebugMode) {
+      dio.interceptors.add(PrettyDioLogger());
+    }
     loginService = LoginService(dio);
   }
 
@@ -180,6 +183,25 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
       saveToken(response.token ?? '');
       navigateToHome();
       context.read<AuthenticationManager>().model = UserModel.fake();
+    } else {
+      _emailController.clear();
+      _passwordController.clear();
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login failed'),
+          content: const Text('Please check your email and password'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black,
+              ),
+              child: const Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
     }
   }
 

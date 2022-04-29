@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_qrcode_app/model/environment.dart';
 import 'package:flutter_qrcode_app/model/user_request_model.dart';
 import 'package:flutter_qrcode_app/model/user_response_model.dart';
@@ -18,11 +18,20 @@ class LoginService extends ILoginService {
 
   @override
   Future<UserResponseModel?> fetchLogin(UserRequestModel model) async {
-    final response = await dio.post(path, data: model);
-    
-    if (response.statusCode == HttpStatus.ok) {
+    try {
+      final response = await dio.post(path,data: model);
       return UserResponseModel.fromJson(response.data);
+    } on DioError catch (e) {
+      if (e.response != null) {
+        if (kDebugMode) {
+          print(e.response?.data);
+        }
+      } else {
+        if (kDebugMode) {
+          print(e.message);
+        }
+      }
+      return null;
     }
-    return null;
   }
 }
