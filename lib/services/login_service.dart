@@ -19,7 +19,7 @@ class LoginService extends ILoginService {
   @override
   Future<UserResponseModel?> fetchLogin(UserRequestModel model) async {
     try {
-      final response = await dio.post(path,data: model);
+      final response = await dio.post(path, data: model);
       return UserResponseModel.fromJson(response.data);
     } on DioError catch (e) {
       if (e.response != null) {

@@ -1,0 +1,18 @@
+{
+    "login": {
+        "login": "Login",
+        "email": "Email address",
+        "password": "Password",
+        "forgot": "Forgot your password?",
+        "signup": "Sign up",
+        "dontHaveAccount": "Don't have an account?"
+    },
+    "signup": {
+        "signup": "Sign Up",
+        "email": "Email address",
+        "password": "Password",
+        "studentNumber": "Student number",
+        "alreadyHaveAccount": "Already have an account?",
+        "login": "Login"
+    }
+}

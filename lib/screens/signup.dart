@@ -2,32 +2,58 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_qrcode_app/model/environment.dart';
-import 'package:flutter_qrcode_app/model/user_model.dart';
-import 'package:flutter_qrcode_app/screens/home.dart';
-import 'package:flutter_qrcode_app/core/auth_manager.dart';
-import 'package:flutter_qrcode_app/core/cache_manager.dart';
-import 'package:flutter_qrcode_app/services/login_service.dart';
-import 'package:flutter_qrcode_app/model/user_request_model.dart';
+import 'package:flutter_qrcode_app/screens/login.dart';
+import 'package:flutter_qrcode_app/screens/qrcode.dart';
+import 'package:flutter_qrcode_app/services/qr_service.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:flutter_qrcode_app/screens/signup.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+import '../model/user_qr_request_model.dart';
+
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key, required this.data}) : super(key: key);
+
+  final String data;
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with CacheManager {
+class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
-  late final LoginService loginService;
-  final _baseUrl = Environment.apiUrl;
+  late final TextEditingController _emailController = TextEditingController();
+  late final TextEditingController _studentNumberController =
+      TextEditingController();
+  late final TextEditingController _passwordController =
+      TextEditingController();
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  // ignore: todo
+  // TODO: Set your IPv4 address here (192.168.38.158)
+  final _serviceUrl = 'http://192.168.38.158:3000/api/v1';
+  late final QRService qrService;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.data != '') {
+      final dio = Dio(BaseOptions(baseUrl: _serviceUrl));
+      if (kDebugMode) {
+        dio.interceptors.add(PrettyDioLogger());
+      }
+      qrService = QRService(dio);
+      fetchQR(widget.data);
+    }
+  }
+
+  Future<void> fetchQR(String studentID) async {
+    final response = await qrService.fetchQR(UserQRRequestModel(
+      studentID: studentID,
+    ));
+    if (response != null) {
+      _emailController.text = response.email!;
+      _studentNumberController.text = response.studentNumber!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +68,39 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 40),
-                  child: const Text(
-                    'login.login',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 45,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 40),
+                      child: const Text(
+                        'signup.signup',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 45,
+                        ),
+                      ).tr(),
                     ),
-                  ).tr(),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 40),
+                      child: IconButton(
+                        icon: const Icon(Icons.qr_code, size: 40),
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const QRCodePage(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: const Text(
-                    'login.email',
+                    'signup.email',
                     style: TextStyle(
                       fontSize: 14,
                     ),
@@ -87,7 +130,36 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: const Text(
-                    'login.password',
+                    'signup.studentNumber',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ).tr(),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                  child: TextFormField(
+                    controller: _studentNumberController,
+                    decoration: InputDecoration(
+                      hintText: '123456789',
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: const EdgeInsets.all(14),
+                      suffixIcon: const Icon(Icons.numbers),
+                    ),
+                    obscureText: true,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'signup.password',
                     style: TextStyle(
                       fontSize: 14,
                     ),
@@ -114,24 +186,11 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                   ),
                 ),
                 Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  child: const Text(
-                    'login.forgot',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ).tr(),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: ElevatedButton(
                     child: const Text(
-                      'login.login',
+                      'signup.signup',
                       style: TextStyle(
-                        color: Colors.white,
                         fontWeight: FontWeight.w500,
                       ),
                     ).tr(),
@@ -145,10 +204,12 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
                         _formKey.currentState!.save();
-                        fetchUserLogin(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
+                        if (kDebugMode) {
+                          print('Email: ${_emailController.text}');
+                          print('Password: ${_passwordController.text}');
+                          print(
+                              'Student Number: ${_studentNumberController.text}');
+                        }
                       }
                     },
                   ),
@@ -157,12 +218,10 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      alignment: Alignment.center,
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: const Text(
-                        'login.dontHaveAccount',
+                        'signup.alreadyHaveAccount',
                         style: TextStyle(
-                          color: Colors.black,
                           fontSize: 14,
                         ),
                       ).tr(),
@@ -171,18 +230,17 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: TextButton(
                         child: const Text(
-                          'login.signup',
+                          'signup.login',
                           style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
                             fontSize: 14,
+                            fontWeight: FontWeight.w600,
                           ),
                         ).tr(),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const SignUpPage(data: ''),
+                              builder: (context) => const LoginPage(),
                             ),
                           );
                         },
@@ -228,65 +286,12 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
         ),
       ),
-    );
-  } 
-
-  @override
-  void initState() {
-    super.initState();
-    final dio = Dio(BaseOptions(baseUrl: _baseUrl));
-    if (kDebugMode) {
-      dio.interceptors.add(PrettyDioLogger());
-    }
-    loginService = LoginService(dio);
-  }
-
-  Future<void> fetchUserLogin(String email, String password) async {
-    final response = await loginService.fetchLogin(
-      UserRequestModel(
-        email: email,
-        password: password,
-      ),
-    );
-
-    if (response != null) {
-      saveToken(response.token ?? '');
-      navigateToHome();
-      context.read<AuthenticationManager>().model = UserModel.fake();
-    } else {
-      _emailController.clear();
-      _passwordController.clear();
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Login failed'),
-          content: const Text('Please check your email and password'),
-          actions: <Widget>[
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.black,
-              ),
-              child: const Text('OK'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  void navigateToHome() {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => const HomePage(),
-      ),
-      (route) => false,
     );
   }
 }

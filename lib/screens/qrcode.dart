@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_qrcode_app/screens/signup.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:flutter_qrcode_app/screens/details.dart';
 
 class QRCodePage extends StatefulWidget {
   const QRCodePage({Key? key}) : super(key: key);
@@ -48,8 +48,8 @@ class _QRCodePageState extends State<QRCodePage> {
       await Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => DetailsPage(
-            qrText: scanData.code.toString(),
+          builder: (context) => SignUpPage(
+            data: scanData.code.toString()
           ),
         ),
         (route) => false,

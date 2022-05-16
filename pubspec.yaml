@@ -40,6 +40,7 @@ dependencies:
   dio: ^4.0.6
   pretty_dio_logger: ^1.2.0-beta-1
   flutter_dotenv: ^5.0.2
+  easy_localization: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
     - .env
     - .env.production
     - .env.development
+    - lib/assets/translations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

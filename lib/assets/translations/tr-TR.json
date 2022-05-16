@@ -1,0 +1,18 @@
+{
+    "login": {
+        "login": "Giriş",
+        "email": "E-posta adresi",
+        "password": "Şifre",
+        "forgot": "Şifremi unuttum",
+        "signup": "Kayıt ol",
+        "dontHaveAccount": "Hesabınız yok mu?"
+    },
+    "signup": {
+        "signup": "Kayıt ol",
+        "email": "E-posta adresi",
+        "password": "Şifre",
+        "studentNumber": "Öğrenci numarası",
+        "alreadyHaveAccount": "Hesabınız var mı?",
+        "login": "Giriş"
+    }
+}
