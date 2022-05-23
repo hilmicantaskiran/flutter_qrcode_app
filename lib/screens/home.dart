@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> with CacheManager {
                 ],
               ),
             ),
+            /*
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),
@@ -76,6 +77,7 @@ class _HomePageState extends State<HomePage> with CacheManager {
                 );
               },
             ),
+            */
           ],
         ),
       ),

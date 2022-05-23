@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class UserQRResponseModel {
   String? email;
   String? studentNumber;

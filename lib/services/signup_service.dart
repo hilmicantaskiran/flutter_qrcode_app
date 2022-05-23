@@ -3,23 +3,23 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_qrcode_app/model/environment.dart';
-import 'package:flutter_qrcode_app/model/user_request_model.dart';
+import 'package:flutter_qrcode_app/model/user_signup_request_model.dart';
 import 'package:flutter_qrcode_app/model/user_response_model.dart';
 
-abstract class ILoginService {
-  final String path = Environment.apiLoginPath;
+abstract class ISignupService {
+  final String path = Environment.apiRegisterPath;
 
-  ILoginService(this.dio);
+  ISignupService(this.dio);
 
-  Future<UserResponseModel?> fetchLogin(UserRequestModel model);
+  Future<UserResponseModel?> fetchSignup(UserSignUpRequestModel model);
   final Dio dio;
 }
 
-class LoginService extends ILoginService {
-  LoginService(Dio dio) : super(dio);
+class SignUpService extends ISignupService {
+  SignUpService(Dio dio) : super(dio);
 
   @override
-  Future<UserResponseModel?> fetchLogin(UserRequestModel model) async {
+  Future<UserResponseModel?> fetchSignup(UserSignUpRequestModel model) async {
     try {
       final response = await dio.post(path, data: model);
       return UserResponseModel.fromJson(

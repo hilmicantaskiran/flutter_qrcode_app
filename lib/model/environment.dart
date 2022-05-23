@@ -14,7 +14,15 @@ class Environment {
     return dotenv.env['PUBLIC_API_URL'] ?? 'PUBLIC_API_URL not found';
   }
 
-  static String get apiPath {
-    return dotenv.env['PUBLIC_API_PATH'] ?? 'PUBLIC_API_PATH not found';
+  static String get apiLoginPath {
+    return dotenv.env['PUBLIC_API_LOGIN_PATH'] ?? 'PUBLIC_API_LOGIN_PATH not found';
+  }
+
+  static String get apiRegisterPath {
+    return dotenv.env['PUBLIC_API_REGISTER_PATH'] ?? 'PUBLIC_API_REGISTER_PATH not found';
+  }
+
+  static String get apiQrPath {
+    return dotenv.env['PUBLIC_API_QR_PATH'] ?? 'PUBLIC_API_QR_PATH not found';
   }
 }

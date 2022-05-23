@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 class UserResponseModel {
   String? token;
 
   UserResponseModel({this.token});
 
   UserResponseModel.fromJson(Map<String, dynamic> json) {
-    token = json['token'];
+    token = json['data'];
   }
 
   Map<String, dynamic> toJson() {
