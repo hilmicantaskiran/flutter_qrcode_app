@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_qrcode_app/model/user_qr_request_model.dart';
-import 'package:flutter_qrcode_app/model/user_qr_response_model.dart';
+import 'package:student/model/user_qr_request_model.dart';
+import 'package:student/model/user_qr_response_model.dart';
 
 import '../model/environment.dart';
 

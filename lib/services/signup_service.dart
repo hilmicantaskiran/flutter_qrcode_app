@@ -1,10 +1,9 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_qrcode_app/model/environment.dart';
-import 'package:flutter_qrcode_app/model/user_signup_request_model.dart';
-import 'package:flutter_qrcode_app/model/user_response_model.dart';
+import 'package:student/model/environment.dart';
+import 'package:student/model/user_signup_request_model.dart';
+import 'package:student/model/user_response_model.dart';
 
 abstract class ISignupService {
   final String path = Environment.apiRegisterPath;

@@ -3,15 +3,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_qrcode_app/model/environment.dart';
-import 'package:flutter_qrcode_app/model/user_model.dart';
-import 'package:flutter_qrcode_app/screens/home.dart';
-import 'package:flutter_qrcode_app/core/auth_manager.dart';
-import 'package:flutter_qrcode_app/core/cache_manager.dart';
-import 'package:flutter_qrcode_app/services/login_service.dart';
-import 'package:flutter_qrcode_app/model/user_request_model.dart';
+import 'package:student/model/environment.dart';
+import 'package:student/model/user_model.dart';
+import 'package:student/screens/home.dart';
+import 'package:student/core/auth_manager.dart';
+import 'package:student/core/cache_manager.dart';
+import 'package:student/services/login_service.dart';
+import 'package:student/model/user_request_model.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:flutter_qrcode_app/screens/signup.dart';
+import 'package:student/screens/signup.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -251,7 +251,7 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   Future<void> fetchUserLogin(String email, String password) async {
     final response = await loginService.fetchLogin(
       UserRequestModel(
-        email: email,
+        email: email.replaceAll(' ', ''),
         password: password,
       ),
     );

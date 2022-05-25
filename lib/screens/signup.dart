@@ -1,23 +1,20 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qrcode_app/screens/home.dart';
-import 'package:flutter_qrcode_app/screens/login.dart';
-import 'package:flutter_qrcode_app/screens/qrcode.dart';
-import 'package:flutter_qrcode_app/services/qr_service.dart';
+import 'package:student/screens/home.dart';
+import 'package:student/screens/login.dart';
+import 'package:student/screens/qrcode.dart';
+import 'package:student/services/qr_service.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_qrcode_app/core/auth_manager.dart';
-import 'package:flutter_qrcode_app/model/user_model.dart';
-import 'package:flutter_qrcode_app/model/user_qr_request_model.dart';
-import 'package:flutter_qrcode_app/model/user_signup_request_model.dart';
-import 'package:flutter_qrcode_app/services/signup_service.dart';
-import 'package:flutter_qrcode_app/core/cache_manager.dart';
-
-import '../model/environment.dart';
+import 'package:student/core/auth_manager.dart';
+import 'package:student/model/user_model.dart';
+import 'package:student/model/user_qr_request_model.dart';
+import 'package:student/model/user_signup_request_model.dart';
+import 'package:student/services/signup_service.dart';
+import 'package:student/core/cache_manager.dart';
+import 'package:student/model/environment.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key, required this.data}) : super(key: key);
@@ -69,11 +66,14 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
   }
 
   Future<void> fetchUserSignUp(
-      String email, String studentNumber, String password) async {
+    String email,
+    String studentNumber,
+    String password,
+  ) async {
     final response = await signUpService.fetchSignup(
       UserSignUpRequestModel(
-        email: email,
-        studentNumber: studentNumber,
+        email: email.replaceAll(' ', ''),
+        studentNumber: studentNumber.replaceAll(' ', ''),
         password: password,
       ),
     );

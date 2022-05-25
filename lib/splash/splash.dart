@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_qrcode_app/core/auth_manager.dart';
-import 'package:flutter_qrcode_app/model/user_model.dart';
-import 'package:flutter_qrcode_app/screens/home.dart';
-import 'package:flutter_qrcode_app/screens/login.dart';
+import 'package:student/core/auth_manager.dart';
+import 'package:student/model/user_model.dart';
+import 'package:student/screens/home.dart';
+import 'package:student/screens/login.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

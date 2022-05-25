@@ -1,6 +1,6 @@
-import 'package:flutter_qrcode_app/model/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qrcode_app/core/cache_manager.dart';
+import 'package:student/model/user_model.dart';
+import 'package:student/core/cache_manager.dart';
 
 class AuthenticationManager extends CacheManager {
   BuildContext context;

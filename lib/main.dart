@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_qrcode_app/assets/style/palette.dart';
+import 'package:student/assets/style/palette.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_qrcode_app/model/environment.dart';
+import 'package:student/model/environment.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_qrcode_app/splash/splash.dart';
-import 'package:flutter_qrcode_app/core/auth_manager.dart';
+import 'package:student/splash/splash.dart';
+import 'package:student/core/auth_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 Future<void> main() async {
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'QRCode Scanner',
+      title: 'Student Inform',
       theme: ThemeData(
         primarySwatch: Palette.greyToDark,
       ),

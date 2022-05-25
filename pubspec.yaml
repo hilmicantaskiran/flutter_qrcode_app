@@ -1,5 +1,5 @@
-name: flutter_qrcode_app
-description: A new Flutter project.
+name: student
+description: A student inform app
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -33,14 +33,14 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  dio: ^4.0.6
+  provider: ^6.0.2
+  flutter_dotenv: ^5.0.2
   cupertino_icons: ^1.0.2
   qr_code_scanner: ^0.7.0
-  shared_preferences: ^2.0.13
-  provider: ^6.0.2
-  dio: ^4.0.6
-  pretty_dio_logger: ^1.2.0-beta-1
-  flutter_dotenv: ^5.0.2
   easy_localization: ^3.0.0
+  shared_preferences: ^2.0.13
+  pretty_dio_logger: ^1.2.0-beta-1
 
 dev_dependencies:
   flutter_test:
@@ -70,10 +70,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets: 
-    - lib/assets/images/
     - .env
     - .env.production
     - .env.development
+    - lib/assets/images/
     - lib/assets/translations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
