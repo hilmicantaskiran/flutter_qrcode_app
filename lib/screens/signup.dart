@@ -257,6 +257,7 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
                         child: const Text(
                           'signup.alreadyHaveAccount',
                           style: TextStyle(
+                            color: Colors.black,
                             fontSize: 14,
                           ),
                         ).tr(),
@@ -267,8 +268,9 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
                           child: const Text(
                             'signup.login',
                             style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
-                              fontWeight: FontWeight.w600,
                             ),
                           ).tr(),
                           onPressed: () {
