@@ -1,37 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_qrcode_app/screens/home.dart';
 import 'package:flutter_qrcode_app/assets/style/palette.dart';
-import 'package:flutter_qrcode_app/core/cache_manager.dart';
-import 'package:flutter_qrcode_app/screens/settings.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _HomePageState extends State<HomePage> with CacheManager {
-  String token = '';
-
-  Future<void> getTokenCache() async {
-    token = await getToken() ?? '';
-    setState(() {});
-  }
-
+class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Home',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        shadowColor: Colors.transparent,
+        title: const Text('Settings', style: TextStyle(color: Colors.black)),
         automaticallyImplyLeading: false,
+        shadowColor: Colors.transparent,
         backgroundColor: Palette.whiteToDark[50],
+        foregroundColor: Colors.black,
       ),
       body: Container(
         color: Colors.white,
@@ -42,13 +29,13 @@ class _HomePageState extends State<HomePage> with CacheManager {
           children: <Widget>[
             Flexible(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.all(10.0),
                     child: const Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                      'Settings',
                       style: TextStyle(fontSize: 18.0),
                     ),
                   )
@@ -64,13 +51,14 @@ class _HomePageState extends State<HomePage> with CacheManager {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+            backgroundColor: Colors.black,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Profile',
           ),
         ],
-        currentIndex: 0,
+        currentIndex: 1,
         onTap: (index) {
           switch (index) {
             case 0:

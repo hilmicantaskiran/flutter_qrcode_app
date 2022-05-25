@@ -64,4 +64,20 @@ class Palette {
       900: Color(0xFF000000),
     },
   );
+
+  static const MaterialColor whiteToDark = MaterialColor(
+    0xFFFFFFFF,
+    <int, Color>{
+      50: Color(0xFFFFFFFF),
+      100: Color(0xFFf8f9fa),
+      200: Color(0xFFe9ecef),
+      300: Color(0xFFdee2e6),
+      400: Color(0xFFced4da),
+      500: Color(0xFFadb5bd),
+      600: Color(0xFF6c757d),
+      700: Color(0xFF495057),
+      800: Color(0xFF343a40),
+      900: Color(0xFF212529),
+    },
+  );
 }
