@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qrcode_app/assets/style/palette.dart';
 import 'package:flutter_qrcode_app/core/cache_manager.dart';
 import 'package:flutter_qrcode_app/components/navbar.dart';
-import 'package:flutter_qrcode_app/screens/qrcode.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -58,26 +57,6 @@ class _HomePageState extends State<HomePage> with CacheManager {
                 ],
               ),
             ),
-            /*
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-                primary: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text('Scan QR Code'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const QRCodePage(),
-                  ),
-                );
-              },
-            ),
-            */
           ],
         ),
       ),
