@@ -19,4 +19,5 @@ class CacheManager {
   }
 }
 
+// ignore: constant_identifier_names
 enum CacheManagerKey { TOKEN }

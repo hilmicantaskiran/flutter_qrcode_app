@@ -8,8 +8,8 @@ class UserQRRequestModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['studentID'] = this.studentID;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['studentID'] = studentID;
     return data;
   }
 }
