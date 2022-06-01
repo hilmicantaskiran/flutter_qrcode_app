@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:student/assets/style/palette.dart';
 import 'package:student/core/cache_manager.dart';
@@ -11,24 +12,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with CacheManager {
-  String token = '';
-
-  Future<void> getTokenCache() async {
-    token = await getToken() ?? '';
-    setState(() {});
-  }
+  String home = tr('screen.home');
+  String profile = tr('screen.profile');
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Home',
+          'screen.home',
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
-        ),
+        ).tr(),
         shadowColor: Colors.white70,
         automaticallyImplyLeading: false,
         backgroundColor: Palette.whiteToDark[50],
@@ -62,14 +60,14 @@ class _HomePageState extends State<HomePage> with CacheManager {
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home),
+            label: home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
+            icon: const Icon(Icons.account_circle),
+            label: profile,
           ),
         ],
         currentIndex: 0,

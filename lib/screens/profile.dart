@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student/core/auth_manager.dart';
@@ -13,11 +14,18 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String home = tr('screen.home');
+  String profile = tr('screen.profile');
+
   @override
   Widget build(BuildContext context) {
+    String locale = context.locale.toString();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile', style: TextStyle(color: Colors.black)),
+        title:
+            const Text('screen.profile', style: TextStyle(color: Colors.black))
+                .tr(),
         automaticallyImplyLeading: false,
         shadowColor: Colors.white70,
         backgroundColor: Palette.whiteToDark[50],
@@ -30,18 +38,64 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           children: ListTile.divideTiles(
             tiles: [
-              const ListTile(
-                title: Text('Information'),
-                trailing: Icon(Icons.arrow_forward_ios),
+              ListTile(
+                title: const Text('profile.userInfo').tr(),
+                trailing: const Icon(Icons.arrow_forward_ios),
+              ),
+              ListTile(
+                title: const Text('profile.language').tr(),
+                trailing: locale == 'en_US'
+                    ? const Text(
+                        'English',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    : const Text(
+                        'Turkish',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('profile.language').tr(),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            title: const Text('English'),
+                            onTap: () {
+                              context.setLocale(context.supportedLocales.first);
+                              Navigator.pop(context);
+                            },
+                          ),
+                          ListTile(
+                            title: const Text('Turkish'),
+                            onTap: () {
+                              context.setLocale(context.supportedLocales.last);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 title: const Text(
-                  'Logout',
+                  'profile.logout',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
                   ),
-                ),
+                ).tr(),
+                trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () {
                   context.read<AuthenticationManager>().removeAllData();
                   Navigator.pushAndRemoveUntil(
@@ -58,14 +112,14 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: const Icon(Icons.home),
+            label: home,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
+            icon: const Icon(Icons.account_circle),
+            label: profile,
           ),
         ],
         currentIndex: 1,

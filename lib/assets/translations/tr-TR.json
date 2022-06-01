@@ -1,4 +1,10 @@
 {
+    "screen": {
+        "home": "Ana Sayfa",
+        "profile": "Profil",
+        "settings": "Ayarlar",
+        "logout": "Çıkış"
+    },
     "login": {
         "login": "Giriş",
         "email": "E-posta adresi",
@@ -14,5 +20,14 @@
         "studentNumber": "Öğrenci numarası",
         "alreadyHaveAccount": "Hesabınız var mı?",
         "login": "Giriş"
+    },
+    "profile": {
+        "userInfo": "Kullanıcı bilgileri",
+        "language": "Dil",
+        "languages": {
+            "tr": "Türkçe",
+            "en": "English"
+        },
+        "logout": "Çıkış"
     }
 }

@@ -1,4 +1,10 @@
 {
+    "screen": {
+        "home": "Home",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout"
+    },
     "login": {
         "login": "Login",
         "email": "Email address",
@@ -14,5 +20,14 @@
         "studentNumber": "Student number",
         "alreadyHaveAccount": "Already have an account?",
         "login": "Login"
+    },
+    "profile": {
+        "userInfo": "User Info",
+        "language": "Language",
+        "languages": {
+            "tr": "Türkçe",
+            "en": "English"
+        },
+        "logout": "Logout"
     }
 }
