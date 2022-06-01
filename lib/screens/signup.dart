@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -5,16 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:student/screens/home.dart';
 import 'package:student/screens/login.dart';
 import 'package:student/screens/qrcode.dart';
-import 'package:student/services/qr_service.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:student/core/auth_manager.dart';
 import 'package:student/model/user_model.dart';
-import 'package:student/model/user_qr_request_model.dart';
 import 'package:student/model/user_signup_request_model.dart';
 import 'package:student/services/signup_service.dart';
 import 'package:student/core/cache_manager.dart';
 import 'package:student/model/environment.dart';
+import 'package:http/http.dart' as http;
+import 'package:xml/xml.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key, required this.data}) : super(key: key);
@@ -35,7 +37,11 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
       TextEditingController();
 
   final _baseUrl = Environment.apiUrl;
-  late final QRService qrService;
+  final _qrApiUrl = Environment.qrApiUrl;
+  final _qrApiPath = Environment.qrApiPath;
+  final _qrApiUsername = Environment.qrApiUsername;
+  final _qrApiPassword = Environment.qrApiPassword;
+
   late final SignUpService signUpService;
 
   @override
@@ -44,7 +50,6 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
     final dio = Dio(BaseOptions(baseUrl: _baseUrl));
 
     signUpService = SignUpService(dio);
-    qrService = QRService(dio);
 
     if (kDebugMode) {
       dio.interceptors.add(PrettyDioLogger());
@@ -55,13 +60,80 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
     }
   }
 
-  Future<void> fetchQR(String studentID) async {
-    final response = await qrService.fetchQR(UserQRRequestModel(
-      studentID: studentID,
-    ));
-    if (response != null) {
-      _emailController.text = response.email as String;
-      _studentNumberController.text = response.studentNumber as String;
+  Future<void> fetchQR(String data) async {
+    try {
+      var kullaniciAdi = _qrApiUsername;
+      var sifre = _qrApiPassword;
+      var xml = '''
+        <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:adu="www.adu.edu.tr">
+          <soap:Header/>
+          <soap:Body>
+              <adu:KimlikKartGetir>
+                <adu:KareKod>${data.toString()}</adu:KareKod>
+                <adu:KullaniciAdi>$kullaniciAdi</adu:KullaniciAdi>
+                <adu:Sifre>$sifre</adu:Sifre>
+              </adu:KimlikKartGetir>
+          </soap:Body>
+        </soap:Envelope>
+      ''';
+
+      final client = http.Client();
+      final request = http.Request(
+        'POST',
+        Uri.parse('$_qrApiUrl$_qrApiPath'),
+      );
+      request.headers.addAll({'content-type': 'text/xml'});
+      request.body = xml.toString();
+
+      final streamedResponse = await client.send(request);
+      final responseBody =
+          await streamedResponse.stream.transform(utf8.decoder).join();
+      client.close();
+
+      final document = XmlDocument.parse(responseBody.toString());
+      final result = {
+        'TcKimlikNo': document.findAllElements('TcKimlikNo').first.text,
+        'OgrenciSicilNo': document.findAllElements('OgrenciSicilNo').first.text,
+        'Ad': document.findAllElements('Ad').first.text,
+        'Soyad': document.findAllElements('Soyad').first.text,
+        'BirimAd': document.findAllElements('BirimAd').first.text,
+        'BolumAd': document.findAllElements('BolumAd').first.text,
+        'id_OgrenciDurumTur':
+            document.findAllElements('id_OgrenciDurumTur').first.text,
+        'OgrenciDurumTurAd':
+            document.findAllElements('OgrenciDurumTurAd').first.text,
+      };
+
+      setState(() {
+        _emailController.text = '${result['OgrenciSicilNo']}@stu.adu.edu.tr';
+        _studentNumberController.text = '${result['OgrenciSicilNo']}';
+        _passwordController.text = '${result['TcKimlikNo']}';
+      });
+
+      /*
+      fetchUserSignUp(
+        _emailController.text,
+        _studentNumberController.text,
+        _passwordController.text,
+      );
+      */
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('QR Code Error'),
+          content: const Text('Please try again'),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black,
+              ),
+              child: const Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
     }
   }
 

@@ -41,6 +41,8 @@ dependencies:
   easy_localization: ^3.0.0
   shared_preferences: ^2.0.13
   pretty_dio_logger: ^1.2.0-beta-1
+  http: ^0.13.4
+  xml: ^5.3.1
 
 dev_dependencies:
   flutter_test:
