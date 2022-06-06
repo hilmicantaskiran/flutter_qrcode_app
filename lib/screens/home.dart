@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:student/assets/style/palette.dart';
 import 'package:student/core/cache_manager.dart';
 import 'package:student/screens/profile.dart';
+// ignore: library_prefixes
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,30 +15,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with CacheManager {
-  String home = tr('screen.home');
-  String profile = tr('screen.profile');
+  late IO.Socket socket;
+  var logger = Logger(
+    filter: null,
+    printer: PrettyPrinter(
+      methodCount: 0,
+      errorMethodCount: 8,
+      lineLength: 120,
+      colors: true,
+      printEmojis: false,
+      printTime: false,
+    ),
+    output: null,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    initSocket();
+  }
+
+  Future<void> initSocket() async {
+    socket = IO.io('http://192.168.1.6:3000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+
+    socket.connect();
+
+    socket.on('connect', (_) {
+      logger.i('Socket connected');
+      socket.emit('message', 'Socket connected');
+    });
+
+    socket.on('message', (data) {
+      logger.w('Received message: $data');
+    });
+
+    socket.on('disconnect', (_) {
+      logger.i('Socket disconnected');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'screen.home',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w500,
-          ),
-        ).tr(),
-        shadowColor: Colors.white70,
-        automaticallyImplyLeading: false,
-        backgroundColor: Palette.whiteToDark[50],
-      ),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: Center(
           child: Container(
+            color: Colors.white,
             padding: const EdgeInsets.all(20.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
                   alignment: Alignment.center,
@@ -63,14 +94,17 @@ class _HomePageState extends State<HomePage> with CacheManager {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: home,
+            label: tr('screen.home'),
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.account_circle),
-            label: profile,
+            label: tr('screen.profile'),
           ),
         ],
         currentIndex: 0,
+        selectedItemColor: Palette.blueToDark[50],
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+        unselectedItemColor: Palette.whiteToDark[600],
         onTap: (index) {
           switch (index) {
             case 0:

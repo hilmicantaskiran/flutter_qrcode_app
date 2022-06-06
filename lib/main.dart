@@ -27,7 +27,7 @@ Future<void> main() async {
         ],
         startLocale: const Locale('tr', 'TR'),
         path: 'lib/assets/translations',
-        child: const MyApp()
+        child: const MyApp(),
       ),
     ),
   );

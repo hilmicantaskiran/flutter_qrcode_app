@@ -36,6 +36,7 @@ class _BottomNavigationBarState extends State<BottomNavigationBar> {
         });
         widget.onTap(index);
       },
+      key: const Key('bottomNavigationBar'),
     );
   }
 }

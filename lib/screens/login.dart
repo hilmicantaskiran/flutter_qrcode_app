@@ -26,6 +26,8 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   late final LoginService loginService;
   final _baseUrl = Environment.apiUrl;
 
+  late bool _passwordVisible = true;
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -96,6 +98,7 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                     child: TextFormField(
                       controller: _passwordController,
+                      obscureText: _passwordVisible,
                       decoration: InputDecoration(
                         hintText: '••••••••',
                         hintStyle: const TextStyle(
@@ -105,11 +108,19 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: const Icon(
-                          Icons.lock_outline_rounded,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
                         ),
                       ),
-                      obscureText: true,
                     ),
                   ),
                   Container(

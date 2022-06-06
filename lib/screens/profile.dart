@@ -14,68 +14,87 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String home = tr('screen.home');
-  String profile = tr('screen.profile');
-
   @override
   Widget build(BuildContext context) {
-    String locale = context.locale.toString();
+    late String locale = context.locale.toString();
 
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text('screen.profile', style: TextStyle(color: Colors.black))
-                .tr(),
-        automaticallyImplyLeading: false,
-        shadowColor: Colors.white70,
-        backgroundColor: Palette.whiteToDark[50],
-      ),
       body: Container(
-        color: Colors.white,
         width: double.infinity,
         height: double.infinity,
         alignment: Alignment.topLeft,
+        color: Colors.white,
         child: ListView(
           children: ListTile.divideTiles(
+            color: const Color.fromARGB(255, 196, 196, 196),
             tiles: [
               ListTile(
+                leading: const Icon(
+                  Icons.person,
+                  color: Palette.greyToDark,
+                ),
                 title: const Text('profile.userInfo').tr(),
-                trailing: const Icon(Icons.arrow_forward_ios),
               ),
               ListTile(
+                leading: const Icon(
+                  Icons.language,
+                  color: Palette.greyToDark,
+                ),
                 title: const Text('profile.language').tr(),
                 trailing: locale == 'en_US'
                     ? const Text(
-                        'English',
+                        'profile.languages.en',
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
                         ),
-                      )
+                      ).tr()
                     : const Text(
-                        'Turkish',
+                        'profile.languages.tr',
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
                         ),
-                      ),
+                      ).tr(),
                 onTap: () {
-                  showDialog(
+                  showModalBottomSheet(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('profile.language').tr(),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
+                    builder: (context) => Container(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      color: Colors.white,
+                      child: ListView(
                         children: <Widget>[
                           ListTile(
-                            title: const Text('English'),
+                            title: Text(
+                              'English',
+                              style: locale == 'en_US'
+                                  ? const TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w500,
+                                    )
+                                  : const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                            ),
                             onTap: () {
                               context.setLocale(context.supportedLocales.first);
                               Navigator.pop(context);
                             },
                           ),
                           ListTile(
-                            title: const Text('Turkish'),
+                            title: Text(
+                              'Türkçe',
+                              style: locale == 'tr_TR'
+                                  ? const TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w500,
+                                    )
+                                  : const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                            ),
                             onTap: () {
                               context.setLocale(context.supportedLocales.last);
                               Navigator.pop(context);
@@ -88,6 +107,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  Icons.exit_to_app,
+                  color: Palette.greyToDark,
+                ),
                 title: const Text(
                   'profile.logout',
                   style: TextStyle(
@@ -95,7 +118,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.w500,
                   ),
                 ).tr(),
-                trailing: const Icon(Icons.arrow_forward_ios),
                 onTap: () {
                   context.read<AuthenticationManager>().removeAllData();
                   Navigator.pushAndRemoveUntil(
@@ -115,14 +137,17 @@ class _ProfilePageState extends State<ProfilePage> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
-            label: home,
+            label: tr('screen.home'),
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.account_circle),
-            label: profile,
+            label: tr('screen.profile'),
           ),
         ],
         currentIndex: 1,
+        selectedItemColor: Palette.blueToDark[50],
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+        unselectedItemColor: Palette.whiteToDark[600],
         onTap: (index) {
           switch (index) {
             case 0:

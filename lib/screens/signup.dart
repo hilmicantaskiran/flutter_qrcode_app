@@ -29,6 +29,8 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> with CacheManager {
   final _formKey = GlobalKey<FormState>();
 
+  late bool _passwordVisible = true;
+
   late final TextEditingController _emailController = TextEditingController();
   late final TextEditingController _studentNumberController =
       TextEditingController();
@@ -276,6 +278,7 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                     child: TextFormField(
                       controller: _passwordController,
+                      obscureText: _passwordVisible,
                       decoration: InputDecoration(
                         hintText: '••••••••',
                         hintStyle: const TextStyle(
@@ -285,11 +288,19 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: const Icon(
-                          Icons.lock_outline_rounded,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _passwordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _passwordVisible = !_passwordVisible;
+                            });
+                          },
                         ),
                       ),
-                      obscureText: true,
                     ),
                   ),
                   Container(
