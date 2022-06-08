@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:student/assets/style/palette.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,6 +14,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
 
+  final String defaultSystemLocale = Platform.localeName;
+
   runApp(
     MultiProvider(
       providers: [
@@ -25,7 +28,9 @@ Future<void> main() async {
           Locale('en', 'US'),
           Locale('tr', 'TR'),
         ],
-        startLocale: const Locale('tr', 'TR'),
+        startLocale: defaultSystemLocale == 'en_US'
+            ? const Locale('en', 'US')
+            : const Locale('tr', 'TR'),
         path: 'lib/assets/translations',
         child: const MyApp(),
       ),

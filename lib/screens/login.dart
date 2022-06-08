@@ -2,11 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:student/model/environment.dart';
-import 'package:student/model/user_model.dart';
 import 'package:student/screens/home.dart';
-import 'package:student/core/auth_manager.dart';
 import 'package:student/core/cache_manager.dart';
 import 'package:student/services/login_service.dart';
 import 'package:student/model/user_request_model.dart';
@@ -269,8 +266,14 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
 
     if (response != null) {
       saveToken(response.token ?? '');
+      saveUser(Map<String, dynamic>.from({
+        "nameSurname": response.user!['nameSurname'],
+        "faculty": response.user!['faculty'],
+        "department": response.user!['department'],
+        "studentNumber": response.user!['studentNumber'],
+        "email": response.user!['email'],
+      }));
       navigateToHome();
-      context.read<AuthenticationManager>().model = UserModel.fake();
     } else {
       _emailController.clear();
       _passwordController.clear();

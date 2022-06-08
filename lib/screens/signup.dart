@@ -7,9 +7,6 @@ import 'package:student/screens/home.dart';
 import 'package:student/screens/login.dart';
 import 'package:student/screens/qrcode.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:provider/provider.dart';
-import 'package:student/core/auth_manager.dart';
-import 'package:student/model/user_model.dart';
 import 'package:student/model/user_signup_request_model.dart';
 import 'package:student/services/signup_service.dart';
 import 'package:student/core/cache_manager.dart';
@@ -35,6 +32,11 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
   late final TextEditingController _studentNumberController =
       TextEditingController();
   late final TextEditingController _passwordController =
+      TextEditingController();
+  late final TextEditingController _nameSurnameController =
+      TextEditingController();
+  late final TextEditingController _facultyController = TextEditingController();
+  late final TextEditingController _departmentController =
       TextEditingController();
 
   final _baseUrl = Environment.apiUrl;
@@ -109,6 +111,9 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
         _emailController.text = '${result['OgrenciSicilNo']}@stu.adu.edu.tr';
         _studentNumberController.text = '${result['OgrenciSicilNo']}';
         _passwordController.text = '${result['TcKimlikNo']}';
+        _nameSurnameController.text = '${result['Ad']} ${result['Soyad']}';
+        _facultyController.text = '${result['BirimAd']}';
+        _departmentController.text = '${result['BolumAd']}';
       });
 
       /*
@@ -116,6 +121,9 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
         _emailController.text,
         _studentNumberController.text,
         _passwordController.text,
+        _nameSurnameController.text,
+        _facultyController.text,
+        _departmentController.text,
       );
       */
     } catch (e) {
@@ -142,18 +150,31 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
     String email,
     String studentNumber,
     String password,
+    String nameSurname,
+    String faculty,
+    String department,
   ) async {
     final response = await signUpService.fetchSignup(
       UserSignUpRequestModel(
         email: email.replaceAll(' ', ''),
         studentNumber: studentNumber.replaceAll(' ', ''),
         password: password,
+        nameSurname: nameSurname,
+        faculty: faculty,
+        department: department,
       ),
     );
+
     if (response != null) {
       saveToken(response.token ?? '');
+      saveUser(Map<String, dynamic>.from({
+        "nameSurname": response.user!['nameSurname'],
+        "faculty": response.user!['faculty'],
+        "department": response.user!['department'],
+        "studentNumber": response.user!['studentNumber'],
+        "email": response.user!['email'],
+      }));
       navigateToHome();
-      context.read<AuthenticationManager>().model = UserModel.fake();
     }
   }
 
@@ -178,6 +199,7 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  const SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -206,6 +228,37 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
                       ),
                     ],
                   ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Text(
+                      'Name Surname',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ).tr(),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                    child: TextFormField(
+                      controller: _nameSurnameController,
+                      decoration: InputDecoration(
+                        hintText: 'Hilmi Can Taşkıran',
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: const EdgeInsets.all(14),
+                        suffixIcon: const Icon(
+                          Icons.account_circle_outlined,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -268,6 +321,66 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: const Text(
+                      'Fakülte',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ).tr(),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                    child: TextFormField(
+                      controller: _facultyController,
+                      decoration: InputDecoration(
+                        hintText: 'Mühendislik Fakültesi',
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: const EdgeInsets.all(14),
+                        suffixIcon: const Icon(
+                          Icons.school_outlined,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Text(
+                      'Bölüm',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ).tr(),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                    child: TextFormField(
+                      controller: _departmentController,
+                      decoration: InputDecoration(
+                        hintText: 'Bilgisayar Mühendisliği',
+                        hintStyle: const TextStyle(
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: const EdgeInsets.all(14),
+                        suffixIcon: const Icon(
+                          Icons.book_outlined,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Text(
                       'signup.password',
                       style: TextStyle(
                         fontSize: 14,
@@ -326,6 +439,9 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
                             _emailController.text,
                             _studentNumberController.text,
                             _passwordController.text,
+                            _nameSurnameController.text,
+                            _facultyController.text,
+                            _departmentController.text,
                           );
                         }
                       },

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student/model/user_model.dart';
 import 'package:student/core/cache_manager.dart';
 
 class AuthenticationManager extends CacheManager {
@@ -9,12 +8,11 @@ class AuthenticationManager extends CacheManager {
   }
 
   bool isLogin = false;
-  UserModel? model;
 
   Future<void> removeAllData() async {
     await removeToken();
+    await removeUser();
     isLogin = false;
-    model = null;
   }
 
   Future<void> fetchUserLogin() async {
