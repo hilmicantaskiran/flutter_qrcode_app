@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:student/core/auth_manager.dart';
 import 'package:student/screens/home.dart';
-import 'package:student/screens/login.dart';
+import 'package:student/splash/splash_ex.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => const LoginPage(),
+          builder: (context) => const SplashExScreen(),
         ),
         (route) => false,
       );

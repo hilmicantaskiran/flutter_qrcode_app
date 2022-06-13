@@ -1,6 +1,8 @@
 {
     "screen": {
         "home": "Ana Sayfa",
+        "login": "Giriş",
+        "signup": "Kayıt Ol",
         "profile": "Profil",
         "settings": "Ayarlar",
         "logout": "Çıkış"
@@ -9,17 +11,17 @@
         "login": "Giriş",
         "email": "E-posta adresi",
         "password": "Şifre",
-        "forgot": "Şifremi unuttum",
-        "signup": "Kayıt ol",
-        "dontHaveAccount": "Hesabınız yok mu?"
+        "forgot": "Şifremi unuttum"
     },
     "signup": {
         "signup": "Kayıt ol",
+        "nameSurname": "Ad ve soyad",
         "email": "E-posta adresi",
         "password": "Şifre",
+        "faculty": "Fakülte",
+        "department": "Bölüm",
         "studentNumber": "Öğrenci numarası",
-        "alreadyHaveAccount": "Hesabınız var mı?",
-        "login": "Giriş"
+        "qrCodeMessage": "Öğrenci kartınızın üzerindeki QR Kodu tarayarak kayıt olabilirsiniz."
     },
     "profile": {
         "userInfo": "Kullanıcı bilgileri",
@@ -29,5 +31,8 @@
             "en": "English"
         },
         "logout": "Çıkış"
+    },
+    "splash": {
+        "appName": "Öğrenci Bilgilendirme"
     }
 }

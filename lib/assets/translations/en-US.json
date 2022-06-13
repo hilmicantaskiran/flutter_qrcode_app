@@ -1,6 +1,8 @@
 {
     "screen": {
         "home": "Home",
+        "login": "Login",
+        "signup": "Register",
         "profile": "Profile",
         "settings": "Settings",
         "logout": "Logout"
@@ -9,17 +11,17 @@
         "login": "Login",
         "email": "Email address",
         "password": "Password",
-        "forgot": "Forgot your password?",
-        "signup": "Sign up",
-        "dontHaveAccount": "Don't have an account?"
+        "forgot": "Forgot your password?"
     },
     "signup": {
         "signup": "Sign Up",
+        "nameSurname": "Name and surname",
         "email": "Email address",
         "password": "Password",
+        "faculty": "Faculty",
+        "department": "Department",
         "studentNumber": "Student number",
-        "alreadyHaveAccount": "Already have an account?",
-        "login": "Login"
+        "qrCodeMessage": "You can register by scanning the QR Code on your student card." 
     },
     "profile": {
         "userInfo": "User Info",
@@ -29,5 +31,8 @@
             "en": "English"
         },
         "logout": "Logout"
+    },
+    "splash": {
+        "appName": "Student Inform"
     }
 }

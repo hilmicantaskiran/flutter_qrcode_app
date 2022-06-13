@@ -3,8 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:student/model/dropdown_items.dart';
 import 'package:student/screens/home.dart';
-import 'package:student/screens/login.dart';
 import 'package:student/screens/qrcode.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:student/model/user_signup_request_model.dart';
@@ -12,6 +12,7 @@ import 'package:student/services/signup_service.dart';
 import 'package:student/core/cache_manager.dart';
 import 'package:student/model/environment.dart';
 import 'package:http/http.dart' as http;
+import 'package:student/splash/splash_ex.dart';
 import 'package:xml/xml.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -47,6 +48,9 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
 
   late final SignUpService signUpService;
 
+  String? _selectedFaculty;
+  String? _selectedDepartment;
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +64,24 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
 
     if (widget.data != '') {
       fetchQR(widget.data);
+    } else {
+      Future(() {
+        final snackBar = SnackBar(
+          content: const Text(
+            'signup.qrCodeMessage',
+            style: TextStyle(
+              fontSize: 14,
+            ),
+          ).tr(),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.red,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          duration: const Duration(seconds: 3),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
     }
   }
 
@@ -114,18 +136,10 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
         _nameSurnameController.text = '${result['Ad']} ${result['Soyad']}';
         _facultyController.text = '${result['BirimAd']}';
         _departmentController.text = '${result['BolumAd']}';
-      });
 
-      /*
-      fetchUserSignUp(
-        _emailController.text,
-        _studentNumberController.text,
-        _passwordController.text,
-        _nameSurnameController.text,
-        _facultyController.text,
-        _departmentController.text,
-      );
-      */
+        _selectedFaculty = '${result['BirimAd']}';
+        _selectedDepartment = '${result['BolumAd']}';
+      });
     } catch (e) {
       showDialog(
         context: context,
@@ -190,340 +204,288 @@ class _SignUpPageState extends State<SignUpPage> with CacheManager {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'signup.signup',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ).tr(),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.black),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.qr_code, size: 30),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const QRCodePage(),
+              ),
+            ),
+          ),
+        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, size: 30),
+          onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const SplashExScreen(),
+            ),
+            (route) => false,
+          ),
+        ),
+      ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 40),
-                        child: const Text(
-                          'signup.signup',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 45,
-                          ),
-                        ).tr(),
+        child: Container(
+          color: Colors.white,
+          child: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: ListView(
+              children: <Widget>[
+                const SizedBox(height: 20),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'signup.nameSurname',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ).tr(),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                  child: TextFormField(
+                    controller: _nameSurnameController,
+                    decoration: InputDecoration(
+                      hintText: 'Hilmi Can Taşkıran',
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
                       ),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.fromLTRB(0, 0, 20, 40),
-                        child: IconButton(
-                          icon: const Icon(Icons.qr_code, size: 40),
-                          onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const QRCodePage(),
-                            ),
-                          ),
-                        ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                    ],
+                      contentPadding: const EdgeInsets.all(14),
+                      suffixIcon: const Icon(
+                        Icons.account_circle_outlined,
+                      ),
+                    ),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Text(
-                      'Name Surname',
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'signup.email',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ).tr(),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                  child: TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      hintText: 'example@email.com',
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: const EdgeInsets.all(14),
+                      suffixIcon: const Icon(
+                        Icons.mail_outline_rounded,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'signup.studentNumber',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ).tr(),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                  child: TextFormField(
+                    controller: _studentNumberController,
+                    decoration: InputDecoration(
+                      hintText: '123456789',
+                      hintStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: const EdgeInsets.all(14),
+                      suffixIcon: const Icon(Icons.numbers),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'signup.faculty',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ).tr(),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                  child: DropdownButtonFormField(
+                    menuMaxHeight: 400,
+                    items: DropdownItems.facultylist,
+                    value: _selectedFaculty,
+                    hint: const Text(
+                      'Fakülte Seçiniz',
                       style: TextStyle(
                         fontSize: 14,
                       ),
-                    ).tr(),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-                    child: TextFormField(
-                      controller: _nameSurnameController,
-                      decoration: InputDecoration(
-                        hintText: 'Hilmi Can Taşkıran',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: const Icon(
-                          Icons.account_circle_outlined,
-                        ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _facultyController.text = value.toString();
+                        _selectedFaculty = value.toString();
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.school_outlined,
+                      color: Colors.grey,
+                    ),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      contentPadding: const EdgeInsets.all(14),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Text(
-                      'signup.email',
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'signup.department',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ).tr(),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                  child: DropdownButtonFormField(
+                    menuMaxHeight: 400,
+                    items: DropdownItems.departmentlist,
+                    value: _selectedDepartment,
+                    hint: const Text(
+                      'Bölüm Seçiniz',
                       style: TextStyle(
                         fontSize: 14,
                       ),
-                    ).tr(),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-                    child: TextFormField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        hintText: 'example@email.com',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: const Icon(
-                          Icons.mail_outline_rounded,
-                        ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _departmentController.text = value.toString();
+                        _selectedDepartment = value.toString();
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.book_outlined,
+                      color: Colors.grey,
+                    ),
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      contentPadding: const EdgeInsets.all(14),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Text(
-                      'signup.studentNumber',
-                      style: TextStyle(
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: const Text(
+                    'signup.password',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ).tr(),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: _passwordVisible,
+                    decoration: InputDecoration(
+                      hintText: '••••••••',
+                      hintStyle: const TextStyle(
                         fontSize: 14,
                       ),
-                    ).tr(),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                    child: TextFormField(
-                      controller: _studentNumberController,
-                      decoration: InputDecoration(
-                        hintText: '123456789',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: const EdgeInsets.all(14),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _passwordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: const Icon(Icons.numbers),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        },
                       ),
                     ),
                   ),
-                  const SizedBox(height: 18),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  child: ElevatedButton(
                     child: const Text(
-                      'Fakülte',
+                      'signup.signup',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                       ),
                     ).tr(),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-                    child: TextFormField(
-                      controller: _facultyController,
-                      decoration: InputDecoration(
-                        hintText: 'Mühendislik Fakültesi',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: const Icon(
-                          Icons.school_outlined,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Text(
-                      'Bölüm',
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ).tr(),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
-                    child: TextFormField(
-                      controller: _departmentController,
-                      decoration: InputDecoration(
-                        hintText: 'Bilgisayar Mühendisliği',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: const Icon(
-                          Icons.book_outlined,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Text(
-                      'signup.password',
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ).tr(),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
-                    child: TextFormField(
-                      controller: _passwordController,
-                      obscureText: _passwordVisible,
-                      decoration: InputDecoration(
-                        hintText: '••••••••',
-                        hintStyle: const TextStyle(
-                          fontSize: 14,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        contentPadding: const EdgeInsets.all(14),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _passwordVisible
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    child: ElevatedButton(
-                      child: const Text(
-                        'signup.signup',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ).tr(),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                        primary: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          _formKey.currentState!.save();
-                          fetchUserSignUp(
-                            _emailController.text,
-                            _studentNumberController.text,
-                            _passwordController.text,
-                            _nameSurnameController.text,
-                            _facultyController.text,
-                            _departmentController.text,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: const Text(
-                          'signup.alreadyHaveAccount',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ).tr(),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: TextButton(
-                          child: const Text(
-                            'signup.login',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ).tr(),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child: PopupMenuButton(
-                      itemBuilder: (context) => const [
-                        PopupMenuItem(
-                          value: 'en',
-                          child: Text(
-                            'English',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: 'tr',
-                          child: Text(
-                            'Türkçe',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                      onSelected: (value) {
-                        if (value == 'en') {
-                          context.setLocale(context.supportedLocales.first);
-                        } else if (value == 'tr') {
-                          context.setLocale(context.supportedLocales.last);
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.language,
-                      ),
-                      iconSize: 30,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      primary: Colors.black,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        _formKey.currentState!.save();
+                        fetchUserSignUp(
+                          _emailController.text,
+                          _studentNumberController.text,
+                          _passwordController.text,
+                          _nameSurnameController.text,
+                          _facultyController.text,
+                          _departmentController.text,
+                        );
+                      }
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

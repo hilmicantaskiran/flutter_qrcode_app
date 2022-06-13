@@ -7,6 +7,7 @@ import 'package:student/core/cache_manager.dart';
 import 'package:student/screens/home.dart';
 import 'package:student/assets/style/palette.dart';
 import 'package:student/screens/login.dart';
+import 'package:student/splash/splash_ex.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -171,7 +172,7 @@ class _ProfilePageState extends State<ProfilePage> with CacheManager {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
+                            builder: (context) => const SplashExScreen()),
                         (route) => false,
                       );
                     },

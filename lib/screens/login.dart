@@ -7,8 +7,7 @@ import 'package:student/screens/home.dart';
 import 'package:student/core/cache_manager.dart';
 import 'package:student/services/login_service.dart';
 import 'package:student/model/user_request_model.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:student/screens/signup.dart';
+import 'package:student/splash/splash_ex.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -31,8 +30,29 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'login.login',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ).tr(),
+        backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
+        iconTheme: const IconThemeData(color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, size: 30),
+          onPressed: () => Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => const SplashExScreen(),
+            ),
+            (route) => false,
+          ),
+        ),
+      ),
       body: SafeArea(
-        child: Center(
+        child: Container(
+          color: Colors.white,
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -40,17 +60,7 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 40),
-                    child: const Text(
-                      'login.login',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 45,
-                      ),
-                    ).tr(),
-                  ),
+                  const SizedBox(height: 20),
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -81,15 +91,32 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Text(
-                      'login.password',
-                      style: TextStyle(
-                        fontSize: 14,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Text(
+                          'login.password',
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        ).tr(),
                       ),
-                    ).tr(),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Text(
+                          'login.forgot',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ).tr(),
+                      ),
+                    ],
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
@@ -121,19 +148,7 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                     ),
                   ),
                   Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                    child: const Text(
-                      'login.forgot',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ).tr(),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: ElevatedButton(
                       child: const Text(
                         'login.login',
@@ -160,83 +175,6 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
                       },
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: const Text(
-                          'login.dontHaveAccount',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ).tr(),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                        child: TextButton(
-                          child: const Text(
-                            'login.signup',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ).tr(),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const SignUpPage(data: ''),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child: PopupMenuButton(
-                      itemBuilder: (context) => const [
-                        PopupMenuItem(
-                          value: 'en',
-                          child: Text(
-                            'English',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        PopupMenuItem(
-                          value: 'tr',
-                          child: Text(
-                            'Türkçe',
-                            style: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                      onSelected: (value) {
-                        if (value == 'en') {
-                          context.setLocale(context.supportedLocales.first);
-                        } else if (value == 'tr') {
-                          context.setLocale(context.supportedLocales.last);
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.language,
-                      ),
-                      iconSize: 30,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -250,9 +188,6 @@ class _LoginPageState extends State<LoginPage> with CacheManager {
   void initState() {
     super.initState();
     final dio = Dio(BaseOptions(baseUrl: _baseUrl));
-    if (kDebugMode) {
-      dio.interceptors.add(PrettyDioLogger());
-    }
     loginService = LoginService(dio);
   }
 
